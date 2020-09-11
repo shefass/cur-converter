@@ -16,3 +16,8 @@
 .Converter {
   margin: 0px 20px 0px 20px;
 }
+
+#error-converter {
+  color: red;
+  font-size: calc(6px + 2vmin);
+}

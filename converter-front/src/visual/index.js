@@ -23,6 +23,7 @@ const Index = ({
   leftButtonName,
   rightButtonName,
   currencies,
+  error
 }) => {
   const [splitButtonOpen, setSplitButtonOpen] = useState(false);
   const [splitButtonOpen2, setSplitButtonOpen2] = useState(false);
@@ -33,6 +34,7 @@ const Index = ({
     <div className="App">
       <header className="App-header">
         <p>Welcome to currencies converter!</p>
+        {error === "Network Error" ? <p id="error-converter"> Sorry, but server do not works. Please contact web admin shefass@gmail.com</p> : null}
         <div className="Converter">
           <InputGroup>
             <InputGroupButtonDropdown

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { SERVER_ADDRESS } from "../CONFIG";
+import { validate } from "./functions";
+
 import Visual from "../visual/index";
 
 class Index extends Component {
@@ -18,6 +20,7 @@ class Index extends Component {
     rightValue: "",
     currencies: "",
     names: "",
+    error: ""
   };
 
   componentDidMount = () => {
@@ -34,9 +37,12 @@ class Index extends Component {
     axios
       .get(SERVER_ADDRESS + "currencies")
       .then((response) => {
-        this.setState({ currencies: response.data });
+        this.setState({ currencies: response.data, error: ""});
       })
       .catch((error) => {
+        if(error.toString().match(/Network Error/)) {
+          this.setState({error: "Network Error"})
+        }
         console.log(error);
       });
   };
@@ -58,16 +64,6 @@ class Index extends Component {
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  validate = (input) => {
-    if (isNaN(Number(input))) {
-      return true;
-    }
-    if (Number(input) < 0) {
-      return true;
-    }
-    return false;
   };
 
   countRightSide = (leftTicker, rightTicker, leftInput) => {
@@ -92,7 +88,7 @@ class Index extends Component {
 
   leftHendler = (e) => {
     if (this._mounted) {
-      let valid = this.validate(e.target.value);
+      let valid = validate(e.target.value);
       this.postAction({ leftInput: e.target.value });
       this.setState({ leftValue: e.target.value, leftInvalid: valid });
       if (!valid) {
@@ -120,7 +116,7 @@ class Index extends Component {
 
   rightHendler = (e) => {
     if (this._mounted) {
-      let valid = this.validate(e.target.value);
+      let valid = validate(e.target.value);
       this.postAction({ rightInput: e.target.value })
       this.setState({ rightValue: e.target.value, rightInvalid: valid });
       if (!valid) {
@@ -170,6 +166,7 @@ class Index extends Component {
       leftValue,
       rightValue,
       currencies,
+      error
     } = this.state;
     return (
       <React.Fragment>
@@ -187,6 +184,7 @@ class Index extends Component {
           leftButtonName={this.getName(leftButton)}
           rightButtonName={this.getName(rightButton)}
           currencies={currencies}
+          error={error}
         />
       </React.Fragment>
     );
